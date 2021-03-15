@@ -1,18 +1,22 @@
-import random, string
-import requests
+from random import sample
+from string import ascii_letters, digits
+
 from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
+from io import BytesIO, BufferedReader
+
+# config PIL colours and font
+COLOUR_RECTANGLE: tuple = (0, 255, 0, 127)
+COLOUR_FONT: tuple = (255, 0, 0, 0)
+FONT_FILE: str = "arial.ttf"
+FONT_SIZE: int = 24
 
 
-COLOUR_RECTANGLE = (0, 255, 0, 127)
-COLOUR_FONT = (255, 0, 0, 0)
-FONT_FILE = "arial.ttf"
-FONT_SIZE = 24
-
-
-def paint_boxes(file, face_boxes: dict, colour_r=COLOUR_RECTANGLE,
-                colour_f=COLOUR_FONT, font_file=FONT_FILE, font_size=FONT_SIZE):
-    """Отрисовка квадратов и номер лица на изображении если найдено более 2 лиц"""
+def paint_boxes(file: BufferedReader, face_boxes: dict, colour_r: tuple = COLOUR_RECTANGLE,
+                colour_f: tuple = COLOUR_FONT, font_file: str = FONT_FILE, font_size: int = FONT_SIZE) -> BytesIO:
+    """Drawing squares and face number in the image if more than 2 faces are found
+    :return: imgByteArr image byte array
+    :type: BytesIO
+    """
     img = Image.open(file)
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(font=font_file, size=font_size)
@@ -28,11 +32,6 @@ def paint_boxes(file, face_boxes: dict, colour_r=COLOUR_RECTANGLE,
     return imgByteArr
 
 
-def random_string(word=8): return "".join(random.sample(string.ascii_letters + string.digits, word))
+def random_string(word: int = 8): return "".join(sample(ascii_letters + digits, word))
 
 
-def multipart_string(): return "WebKitFormBoundary" + random_string(16)
-
-
-def multipart_headers(string=multipart_string()):
-    return {"Content-Type": f"multipart/form-data; boundary=----{string}"}

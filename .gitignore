@@ -13,3 +13,5 @@ build/
 *.swp
 .idea
 __pycache__/
+findclone_api.egg-info/
+findclone_api.egg-info/*
