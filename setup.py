@@ -11,7 +11,7 @@ setup(
     packages=['Findclone', "examples"],
     install_requires=["requests",
                       "aiohttp",
-                      "PIL"],
-    python_requires=">=3.5",
+                      "Pillow"],
+    python_requires=">=3.6",
     author_email="bomb3r98@gmail.com"
 )
