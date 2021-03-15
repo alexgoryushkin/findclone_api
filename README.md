@@ -1,13 +1,18 @@
-Findclone API by vypivshiy<br>
-Installation:<br>
-`pip install findclone_api`<br>
-Requirements:<br>
+<h2>Findclone API by vypivshiy</h2>
+<h3>Описание</h3>
+findclone-api - это библиотка для взаимодействия с сайтом [Findclone.ru](https://findclone.ru) 
+на уровне высокоуровневых запросов.
+Присутствет синхронная и __асинхронная__ версии модулей и типизация объектов запросов для более удобной
+работы.
+<h3>Установка через pip</h3>
+`pip install findclone_api`
+<h3>Requirements</h3>
 ```
 requests
 aiohttp
 PIL
 ```
-Examples:
+<h3>Примеры использования:</h3>
 
 ```python
 # sync findclone example
@@ -19,11 +24,7 @@ if __name__ == '__main__':
     password = "foobar"
     f = findclone.FindcloneApi()
     f.login(phone, password)
-    session = f.get_session # get session for authorisation
-    f2 = findclone.FindcloneApi()
-    f2.login(session_key=session["session-key"], userid=session["user-id"])
-    print(f2)
-    print(f)  # get account information or call f.info
+    print(f) # get account information
     # upload photo
     profiles = f.upload("test.jpg")
     # or send image url
@@ -70,7 +71,7 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(login, password))
 ```
-case if detect 2 or more faces:<br>
+<h3>Кейс если обнаружены на фото 2 и более лиц</h3>
 test.jpg:
 ![img1](https://i.ibb.co/ZN2RM5F/Young-happy-couple-using-two-phones-share-social-media-news-at-home-smiling-husband-and-wife-millenn.jpg)
 ```python
@@ -90,7 +91,7 @@ if __name__ == '__main__':
 ```
 out_image.jpg:
 ![img2](https://i.ibb.co/SnrGGnD/test-123.png)
-finally, retry upload request:
+Из результата с фотографии, выбираем id лица (указан под квадратом):
 ```python
 ...
 face_box_id = 0
@@ -98,3 +99,4 @@ profiles = f.upload("test.jpg", face_box_id=face_box_id)
 for profile in profiles:
     print(profile)
 ``` 
+[Больше примеров](https://github.com/vypivshiy/findclone_api/tree/main/examples)

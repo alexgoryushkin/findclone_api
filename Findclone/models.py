@@ -1,9 +1,9 @@
-from requests import Response as _Response
+from typing import List
 from datetime import datetime
+
+from requests import Response as _Response
 from aiohttp import ClientResponse
 from .exceptions import a_error_handler, error_handler
-
-from typing import List
 
 
 class Account:
