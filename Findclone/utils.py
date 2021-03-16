@@ -9,8 +9,7 @@ from Findclone.pillow_config import DrawConfig
 
 def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> BytesIO:
     """Drawing squares and face number in the image if more than 2 faces are found
-    :return: imgByteArr image byte array
-    :type: BytesIO
+    :return imgByteArr: image BytesIO object
     """
     conf = DrawConfig
     font_file: str = conf.FONT_FILE
