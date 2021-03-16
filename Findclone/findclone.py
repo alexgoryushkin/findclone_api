@@ -2,7 +2,7 @@ from requests import Session
 
 from .exceptions import FindcloneError, error_handler
 from .utils import random_string, paint_boxes
-from .models import *
+from .models import get_builder, Account, Profiles, Histories
 from io import BufferedReader, BytesIO
 
 
@@ -15,7 +15,8 @@ class FindcloneApi:
         self.session.headers.update({'User-Agent': 'findclone-api/1.0'})
         self._session_key = None
         self._userid = None
-        self.__builder = Factory().build_response
+
+        self.__builder = get_builder().build_response
 
     def login(self, login: [str, None] = None, password: [str, None] = None, session_key: [str, None] = None,
               userid: [int, str, None] = None) -> bool:

@@ -7,6 +7,6 @@ if __name__ == '__main__':
     print("MODELS:")
     [help(model) for model in models_]
     # get findclone attributes and methods
-    libs = [findclone.FindcloneApi, aiofindclone.FindcloneAio]
+    libs = [findclone.FindcloneApi, aiofindclone.FindcloneAsync]
     print("LIBS:")
     [help(lib) for lib in libs]

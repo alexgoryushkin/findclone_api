@@ -214,7 +214,10 @@ class Profiles:
         return iter(self.__profiles_list)
 
 
-class Factory:
+def get_builder(): return _Builder()
+
+
+class _Builder:
     """
     Class builder objects
     """

@@ -1,10 +1,11 @@
-from Findclone import findclone
+from Findclone import FindcloneApi
+
 
 if __name__ == '__main__':
     login = "123123123"
     password = "foobar"
     file_url = "https://example.com/rick_astley_never_give_u_up.jpg"
-    f = findclone.FindcloneApi()
+    f = FindcloneApi()
     f.login(login, password)
     result = f.upload(file_url)
     # check if is really Profiles object else write file with painted rectangles

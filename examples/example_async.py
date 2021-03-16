@@ -1,11 +1,11 @@
 import asyncio
 import aiohttp
-from Findclone import aiofindclone
+from Findclone import FindcloneAsync
 
 
 async def main(login, password):
     async with aiohttp.ClientSession() as session:
-        findclone = aiofindclone.FindcloneAio(session)
+        findclone = FindcloneAsync(session)
         await findclone.login(login=login, password=password)
         print(await findclone.info)
         histories = await findclone.history()

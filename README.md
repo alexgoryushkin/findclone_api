@@ -1,29 +1,28 @@
-<h2>Findclone API by vypivshiy</h2>
-<h3>Описание</h3>
-findclone-api - это библиотка для взаимодействия с сайтом [Findclone.ru](https://findclone.ru) 
+# Findclone API by vypivshiy
+### Описание
+findclone-api - это библиотка для взаимодействия с [Findclone](https://findclone.ru) 
 на уровне высокоуровневых запросов.
 Присутствет синхронная и __асинхронная__ версии модулей и типизация объектов 
 ~~чтобы модная и современная IDE всё подсказывала, да~~ для более удобной
 работы.
-<h3>Установка через pip</h3>
+### Установка через pip
 `pip install findclone_api`
-<h3>Requirements</h3>
+### Requirements
 ```
 requests
 aiohttp
-PIL
+Pillow
 ```
-<h3>Примеры использования:</h3>
+### Примеры использования:
 
 ```python
 # sync findclone example
-from Findclone import findclone
-from io import BytesIO
+from Findclone import FindcloneApi, is_image
 
 if __name__ == '__main__':
     phone = "+123456172"
     password = "foobar"
-    f = findclone.FindcloneApi()
+    f = FindcloneApi()
     f.login(phone, password)
     print(f) # get account information
     # upload photo
@@ -31,7 +30,7 @@ if __name__ == '__main__':
     # or send image url
     # profiles = f.upload("https://example.com/image.png")
     # work with return object:
-    if isinstance(profiles, BytesIO):  # check return object
+    if is_image(profiles):  # check return object
         print("write file")
         with open("return_image.jpg", "wb") as file:
             file.write(profiles.getvalue())
@@ -48,21 +47,20 @@ if __name__ == '__main__':
 # async findclone example
 import asyncio
 import aiohttp
-from Findclone import aiofindclone
-from io import BytesIO
+from Findclone import FindcloneAsync, is_image
 
 async def main(login, password):
     async with aiohttp.ClientSession() as session:
-        f = aiofindclone.FindcloneAio(session)
+        f = FindcloneAsync(session)
         await f.login(login, password)
         print(await f.info)
         profiles = await f.upload("file.jpg")
-        if isinstance(profiles, BytesIO):
+        if is_image(profiles):
             with open("return_image.jpg", "wb") as file:
                 file.write(profiles.getvalue())
         else:
             for profile in profiles:
-                print(profile)  # return profile.__str__()
+                print(profile)
                 print(profile.url, profile.score)
         
 
@@ -72,22 +70,23 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(login, password))
 ```
-<h3>Кейс если обнаружены на фото 2 и более лиц</h3>
+### Кейс если обнаружены на фото 2 и более лиц
 test.jpg:
 ![img1](https://i.ibb.co/ZN2RM5F/Young-happy-couple-using-two-phones-share-social-media-news-at-home-smiling-husband-and-wife-millenn.jpg)
 ```python
-from Findclone import findclone
+import Findclone
 
 if __name__ == '__main__':
     phone = "+123456172"
     password = "foobar"
-    f = findclone.FindcloneApi()
+    f = Findclone.FindcloneApi()
     f.login(phone, password)
     profiles = f.upload("test.jpg") 
     # write or send object:
     print("write file")
-    with open("out_image.jpg", "wb") as file:
-        file.write(profiles.getvalue())
+    if Findclone.is_image(profiles):
+        with open("out_image.jpg", "wb") as file:
+            file.write(profiles.getvalue())
     ...
 ```
 out_image.jpg:

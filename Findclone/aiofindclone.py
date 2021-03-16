@@ -1,12 +1,12 @@
 from aiohttp import ClientSession, FormData
 
-from .models import *
+from .models import Account, Profiles, Histories, get_builder
 from .utils import random_string, paint_boxes
 from .exceptions import a_error_handler, FindcloneError
-from io import BufferedReader
+from io import BufferedReader, BytesIO
 
 
-class FindcloneAio:
+class FindcloneAsync:
     """async findclone api class
     Attributes:
         headers : dict - set requests headers
@@ -14,7 +14,7 @@ class FindcloneAio:
     def __init__(self, session: ClientSession):
         self._session = session
         self.headers = {"User-Agent": "findclone-api/1.0"}
-        self.__builder = Factory().build_aio_response
+        self.__builder = get_builder().build_aio_response
         self.session_key = None
         self.userid = None
         self.__info = None
@@ -22,11 +22,12 @@ class FindcloneAio:
     async def login(self, login: [str, None] = None, password: [str, None] = None, session_key: [str, None] = None,
                     userid: [str, int, None] = None) -> bool:
         """
+        *coro
         Findclone authorisation
-        :param login:
-        :param password:
-        :param session_key:
-        :param userid:
+            :param login:
+            :param password:
+            :param session_key:
+            :param userid:
         :return:
         """
         if login and password:
@@ -53,6 +54,7 @@ class FindcloneAio:
     @property
     async def info(self) -> Account:
         """
+        *coro
         return account information
         :return:
         """
@@ -64,6 +66,7 @@ class FindcloneAio:
     async def upload(self, file: [str, BufferedReader], face_box_id: int = None,
                      timeout: float = 180) -> [Profiles, BytesIO]:
         """
+        *coro
         upload image or image url and return Profiles object or BytesIO object
         :param file:
         :param face_box_id:
@@ -95,6 +98,7 @@ class FindcloneAio:
 
     async def history(self, offset: int = 0, count: int = 100) -> Histories:
         """
+        *coro
         return object history search for account
         :param offset: int
         :param count: int
@@ -107,6 +111,7 @@ class FindcloneAio:
 
     async def search(self, search_id: [int, str], count: int = 128) -> Profiles:
         """
+        *coro
         return Profiles object
         :param search_id: [int, str]
         :param count: [int]
@@ -120,6 +125,7 @@ class FindcloneAio:
     @property
     def get_session(self) -> dict:
         """
+        *coro
         return session-key and userid account
         :return: {"session-key": session_key, "user-id": userid}
         """

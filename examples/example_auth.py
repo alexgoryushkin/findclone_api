@@ -1,8 +1,8 @@
-from Findclone import findclone
+from Findclone import FindcloneApi
 
 
 def auth_1(login, password):
-    f = findclone.FindcloneApi()
+    f = FindcloneApi()
     f.login(login, password)
     f.session.headers.update({"foo": "bar"})  # config requests.Session() object
     session_auth = f.get_session  # return dict
@@ -11,7 +11,7 @@ def auth_1(login, password):
 
 
 def auth_2(userid, session_key):
-    f = findclone.FindcloneApi()
+    f = FindcloneApi()
     f.login(session_key=session_key, userid=userid)
     print(f.info)
 

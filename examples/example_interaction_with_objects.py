@@ -1,8 +1,8 @@
-from Findclone import findclone
+from Findclone import FindcloneApi
 
 
 def main(login, password):
-    f = findclone.FindcloneApi()
+    f = FindcloneApi()
     f.login(login, password)
     account = f.info  # get account object
     print(account)
