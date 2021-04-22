@@ -1,5 +1,5 @@
 from requests import Session
-
+from Findclone import __version__
 from .exceptions import FindcloneError, error_handler
 from .utils import random_string, paint_boxes
 from .models import get_builder, Account, Profiles, Histories
@@ -7,26 +7,27 @@ from io import BufferedReader, BytesIO
 
 
 class FindcloneApi:
-    """sync findclone api class
-    Attributes:
-        session: Session() - requests.Session() object"""
+    """Sync Findclone class"""
     def __init__(self):
         self.session = Session()
-        self.session.headers.update({'User-Agent': 'findclone-api/1.0'})
+        self.session.headers.update({'User-Agent': f'findclone-api/{__version__}'})
         self._session_key = None
         self._userid = None
 
         self.__builder = get_builder().build_response
 
-    def login(self, login: [str, None] = None, password: [str, None] = None, session_key: [str, None] = None,
+    def login(self,
+              login: [str, None] = None,
+              password: [str, None] = None,
+              session_key: [str, None] = None,
               userid: [int, str, None] = None) -> bool:
         """
         Findclone authorisation
-        :param login:
-        :param password:
-        :param session_key:
-        :param userid:
-        :return:
+            :param login: account login
+            :param password: account password
+            :param session_key: account session_key
+            :param userid: account userid
+            :return: True if auth success
         """
         if session_key and userid:
             self.session.headers.update({"session-key": session_key, "user-id": str(userid)})
@@ -38,32 +39,33 @@ class FindcloneApi:
             response = self.session.post("https://findclone.ru/login",
                                          data={"phone": login, "password": password})
             error_handler(response)
-            self._session_key = response.json()["session_key"]
-            self._userid = response.json()["userid"]
+            self._session_key = response.json()["_session_key"]
+            self._userid = response.json()["_userid"]
             self.session.headers.update({'session-key': self._session_key, 'user-id': str(self._userid)})
             return True
         else:
-            raise FindcloneError("Need login and password or session-key and userid")
+            raise FindcloneError("Need login and password or session-key and _userid")
 
     @property
     def info(self) -> Account:
         """
-        return Account object
-        :return Account:
-        :type Account:
+        property
+        :return: Account object
         """
         response = self.session.get("https://findclone.ru/profile")
         info = self.__builder(response)
         return info
 
-    def upload(self, file: [str, BufferedReader], face_box_id: [None, int] = None,
+    def upload(self,
+               file: [str, BufferedReader],
+               face_box_id: [None, int] = None,
                timeout: [float] = 30) -> [Profiles, BytesIO]:
         """
-        upload file on read file or url and return Profiles object if founded 1 face else return BytesIO object
-        :param file: url or file bytes object
-        :param face_box_id: int
-        :param timeout: float
-        :return:
+        Upload file on read file or url and return Profiles object if founded 1 face else return BytesIO object
+        :param file: image direct download link or path
+        :param face_box_id: int OPTIONAL, send facebox id if 2 or more faces are detected
+        :param timeout: float max timeout delay
+        :return: Profiles object or BytesIO if 2 or more faces are detected
         """
         if file.startswith("http"):
             file = self.session.get(file).content
@@ -84,10 +86,10 @@ class FindcloneApi:
 
     def history(self, offset: int = 0, count: int = 100) -> Histories:
         """
-        return history search for account
+        return histories search for this account
         :param offset: int
         :param count: int
-        :return:
+        :return: Histories object
         """
         response = self.session.get("https://findclone.ru/hist", params={"start": offset, "count": count})
         history = self.__builder(response)
@@ -96,9 +98,9 @@ class FindcloneApi:
     def search(self, search_id: [int, str], count: int = 128) -> Profiles:
         """
         return profiles for history search results
-        :param search_id: [int, str]
-        :param count: int
-        :return:
+        :param search_id: [int, str] search id
+        :param count: int max Profiles count get
+        :return: Profiles object
         """
         response = self.session.get("https://findclone.ru/search", params={"id": search_id, "count": count})
         search_result = self.__builder(response)
@@ -108,15 +110,13 @@ class FindcloneApi:
     def get_session(self) -> dict:
         """
         return session-key and userid account
-        :return:  {'session-key': key, "user-id": userid}
+        :return:  {'session-key': session_key, "user-id": userid}
         """
         _session = {'session-key': self._session_key, "user-id": self._userid}
         return _session
 
     def __str__(self):
         """
-        return account information
-        :return self.info:
+        :return: Account object
         """
-        response = self.info
-        return response.__str__()
+        return self.info

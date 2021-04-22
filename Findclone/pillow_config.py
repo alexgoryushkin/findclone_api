@@ -1,4 +1,7 @@
 from typing import Tuple
+"""
+Config rectangle, pillow font, size, colours 
+"""
 
 
 class DrawConfig:

@@ -1,4 +1,4 @@
-from Findclone import FindcloneApi
+from Findclone import FindcloneApi, is_image, save_image
 
 
 if __name__ == '__main__':
@@ -8,10 +8,11 @@ if __name__ == '__main__':
     f = FindcloneApi()
     f.login(login, password)
     result = f.upload(file_url)
-    # check if is really Profiles object else write file with painted rectangles
-    if isinstance(result, list):
+    # check Profiles object else write file with painted rectangles
+    if is_image(result):
+        save_image(result, "foobar.jpg")
+    else:
         for profile in result:
             print(profile.raw_data)
-    else:
-        with open("foobar.jpg", "wb") as file:
-            file.write(result.getvalue())
+            for detail in profile.details:
+                print(detail.url_source)

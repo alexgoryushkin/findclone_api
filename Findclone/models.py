@@ -14,7 +14,7 @@ class Account:
         quantity : int - return quantity requests
         period : int - return period subscription in seconds
         typename : str - return subscription type
-        userid : int - return findclone userid
+        userid : int - return findclone _userid
         period_days : int - period subscription in days
     """
     def __init__(self):
@@ -99,7 +99,7 @@ class Detail:
         photoid : int - return photoid
         size : int - return size face detect
         url : str - return url image
-        userid : int - return vk userid
+        userid : int - return vk _userid
         (x,y) : (int, int) - return coords detected face"""
     def __init__(self):
         self.raw_data: [list, None] = None
@@ -153,7 +153,7 @@ class Profile:
             detail.photoid = _detail["photoid"]
             detail.size = _detail["size"]
             detail.url = _detail["url"]
-            detail.userid = _detail["userid"]
+            detail.userid = _detail["_userid"]
             detail.x = _detail["x"]
             detail.y = _detail["y"]
             self.details.append(detail)
@@ -188,12 +188,12 @@ class Profiles:
     def _prettify(self) -> None:
         for _profile in self.raw_data:
             profile = Profile()
-            age = _profile["Age"] if _profile.get("Age") else None
-            city = _profile["city"] if _profile.get("city") else None
+            age = _profile.get("Age")
+            city = _profile.get("city")
             details = _profile["details"]
             firstname = _profile["firstname"]
             score = _profile["score"]
-            url = "https://vk.com/id" + str(_profile['userid'])
+            url = "https://vk.com/id" + str(_profile['_userid'])
 
             profile.raw_data = _profile
             profile.profile = _profile
@@ -209,7 +209,7 @@ class Profiles:
     def __iter__(self) -> iter(List[Profile]):
         """
         return list of Profile objects
-        :return:
+        :return: iter(List[Profiles])
         """
         return iter(self.__profiles_list)
 
@@ -234,7 +234,7 @@ class _Builder:
             account.quantity = response["Quantity"]
             account.period = response["Period"]
             account.typename = response["TypeName"]
-            account.userid = response["userid"]
+            account.userid = response["_userid"]
             return account
         # Build histories search object
         elif resp_url.endswith("hist"):
@@ -265,7 +265,7 @@ class _Builder:
             account.quantity = response["Quantity"]
             account.period = response["Period"]
             account.typename = response["TypeName"]
-            account.userid = response["userid"]
+            account.userid = response["_userid"]
             return account
         # Build histories search object
         elif resp_url.endswith("hist"):

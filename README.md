@@ -1,7 +1,6 @@
 # Findclone API by vypivshiy
 ### Описание
-findclone-api - это библиотка для взаимодействия с [Findclone](https://findclone.ru) 
-на уровне высокоуровневых запросов.
+findclone-api - это неофициальное API для взаимодействия с [Findclone](https://findclone.ru) .
 Присутствет синхронная и __асинхронная__ версии модулей и типизация объектов 
 ~~чтобы модная и современная IDE всё подсказывала, да~~ для более удобной
 работы.
@@ -46,22 +45,25 @@ if __name__ == '__main__':
 ```python
 # async findclone example
 import asyncio
-import aiohttp
-from Findclone import FindcloneAsync, is_image
+from Findclone import FindcloneAsync, is_image, save_image
 
 async def main(login, password):
-    async with aiohttp.ClientSession() as session:
-        f = FindcloneAsync(session)
+    # контектстный менеджер, который автоматически закроет сессию
+    async with FindcloneAsync() as f:
         await f.login(login, password)
         print(await f.info)
         profiles = await f.upload("file.jpg")
         if is_image(profiles):
-            with open("return_image.jpg", "wb") as file:
-                file.write(profiles.getvalue())
+            save_image(profiles, "out.jpg")
         else:
             for profile in profiles:
                 print(profile)
                 print(profile.url, profile.score)
+    # Или вместо контекстного менеджера можно вручную открывать и закрывать сессию
+    f = FindcloneAsync()
+    await f.login(login, password)
+    # ... какой то код
+    await f.close()
         
 
 if __name__ == '__main__':
@@ -85,8 +87,7 @@ if __name__ == '__main__':
     # write or send object:
     print("write file")
     if Findclone.is_image(profiles):
-        with open("out_image.jpg", "wb") as file:
-            file.write(profiles.getvalue())
+        Findclone.save_image(profiles, "out.jpg")
     ...
 ```
 out_image.jpg:
@@ -100,3 +101,5 @@ for profile in profiles:
     print(profile)
 ``` 
 [Больше примеров](https://github.com/vypivshiy/findclone_api/tree/main/examples)
+
+[Краткое описание объектов](OBJECTS.md)

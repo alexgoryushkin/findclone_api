@@ -9,7 +9,7 @@ from Findclone.pillow_config import DrawConfig
 
 def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> BytesIO:
     """Drawing squares and face number in the image if more than 2 faces are found
-    :return imgByteArr: image BytesIO object
+    :return img_byte_arr: image BytesIO object
     """
     conf = DrawConfig
     font_file: str = conf.FONT_FILE
@@ -28,10 +28,10 @@ def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> BytesIO:
         t = face_box["t"]
         draw.rectangle(((_l, t), (_l + height, t + height)), outline=colour_r, width=3)
         draw.text(((_l*2+height + x)/2, t+height + y), str(face_number), fill=colour_f, font=font)
-    imgByteArr = BytesIO()
-    img.save(imgByteArr, format="png")
+    img_byte_arr = BytesIO()
+    img.save(img_byte_arr, format="png")
     del conf
-    return imgByteArr
+    return img_byte_arr
 
 
 def random_string(word: int = 8): return "".join(sample(ascii_letters + digits, word))
@@ -40,3 +40,13 @@ def random_string(word: int = 8): return "".join(sample(ascii_letters + digits, 
 def is_image(obj: [Profiles, BytesIO]) -> bool:
     """Check response if is image"""
     return isinstance(obj, BytesIO)
+
+
+def save_image(img: BytesIO, filename: str) -> None:
+    """
+    Args:
+        img: BytesIO object
+        filename: path file
+    """
+    with open(filename, "wb") as file:
+        file.write(img.getvalue())

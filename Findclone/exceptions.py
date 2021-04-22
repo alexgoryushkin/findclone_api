@@ -7,6 +7,7 @@ class FindcloneError(Exception):
 
 
 def error_handler(response: Response):
+    """error handler for sync findclone class"""
     if response.status_code != 200:
         if isinstance(response.json(), dict):
             if response.json().get("Error"):
@@ -15,6 +16,7 @@ def error_handler(response: Response):
 
 
 async def a_error_handler(response: ClientResponse):
+    """error handler for async findclone class"""
     resp = await response.json()
     if response.status != 200:
         if isinstance(resp, dict):
