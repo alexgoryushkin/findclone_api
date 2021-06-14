@@ -39,8 +39,8 @@ class FindcloneApi:
             response = self.session.post("https://findclone.ru/login",
                                          data={"phone": login, "password": password})
             error_handler(response)
-            self._session_key = response.json()["_session_key"]
-            self._userid = response.json()["_userid"]
+            self._session_key = response.json()["session_key"]
+            self._userid = response.json()["userid"]
             self.session.headers.update({'session-key': self._session_key, 'user-id': str(self._userid)})
             return True
         else:

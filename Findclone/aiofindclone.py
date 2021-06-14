@@ -1,7 +1,6 @@
 from aiohttp import ClientSession, FormData
 
 from Findclone import __version__
-
 from .models import Account, Profiles, Histories, get_builder
 from .utils import random_string, paint_boxes
 from .exceptions import a_error_handler, FindcloneError
@@ -42,8 +41,8 @@ class FindcloneAsync:
                 await a_error_handler(response)
                 resp = await response.json()
                 self.__info = await self.__builder(response)
-                self._session_key = resp["_session_key"]
-                self._userid = resp["_userid"]
+                self._session_key = resp["session_key"]
+                self._userid = resp["userid"]
                 self.headers.update({'session-key': self._session_key, 'user-id': str(self._userid)})
                 return True
         elif session_key and userid:

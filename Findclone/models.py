@@ -14,7 +14,7 @@ class Account:
         quantity : int - return quantity requests
         period : int - return period subscription in seconds
         typename : str - return subscription type
-        userid : int - return findclone _userid
+        userid : int - return findclone userid
         period_days : int - period subscription in days
     """
     def __init__(self):
@@ -99,7 +99,7 @@ class Detail:
         photoid : int - return photoid
         size : int - return size face detect
         url : str - return url image
-        userid : int - return vk _userid
+        userid : int - return vk userid
         (x,y) : (int, int) - return coords detected face"""
     def __init__(self):
         self.raw_data: [list, None] = None
@@ -153,7 +153,7 @@ class Profile:
             detail.photoid = _detail["photoid"]
             detail.size = _detail["size"]
             detail.url = _detail["url"]
-            detail.userid = _detail["_userid"]
+            detail.userid = _detail["userid"]
             detail.x = _detail["x"]
             detail.y = _detail["y"]
             self.details.append(detail)
@@ -193,7 +193,7 @@ class Profiles:
             details = _profile["details"]
             firstname = _profile["firstname"]
             score = _profile["score"]
-            url = "https://vk.com/id" + str(_profile['_userid'])
+            url = "https://vk.com/id" + str(_profile['userid'])
 
             profile.raw_data = _profile
             profile.profile = _profile
@@ -234,7 +234,7 @@ class _Builder:
             account.quantity = response["Quantity"]
             account.period = response["Period"]
             account.typename = response["TypeName"]
-            account.userid = response["_userid"]
+            account.userid = response["userid"]
             return account
         # Build histories search object
         elif resp_url.endswith("hist"):
@@ -265,7 +265,7 @@ class _Builder:
             account.quantity = response["Quantity"]
             account.period = response["Period"]
             account.typename = response["TypeName"]
-            account.userid = response["_userid"]
+            account.userid = response["userid"]
             return account
         # Build histories search object
         elif resp_url.endswith("hist"):
