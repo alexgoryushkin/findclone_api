@@ -1,10 +1,13 @@
+from io import BufferedReader
+from typing import Optional, Tuple
+
+from PIL.Image import Image
 from aiohttp import ClientSession, FormData
 
 from Findclone import __version__
+from .exceptions import a_error_handler, FindcloneError
 from .models import Account, Profiles, Histories, get_builder
 from .utils import random_string, paint_boxes
-from .exceptions import a_error_handler, FindcloneError
-from io import BufferedReader, BytesIO
 
 
 class FindcloneAsync:
@@ -70,15 +73,15 @@ class FindcloneAsync:
 
     async def upload(self,
                      file: [str, BufferedReader],
-                     face_box_id: int = None,
-                     timeout: float = 180) -> [Profiles, BytesIO]:
+                     face_box_id: Optional[int] = None,
+                     timeout: Optional[float] = 180) -> Tuple[Optional[Image], dict]:
         """
         *coro
-        upload image or image url and return Profiles object or BytesIO object
+        upload image or image url and return Tuple[Optional[Image], response as dict]
         :param file: image direct download link or path
         :param face_box_id: OPTIONAL, send facebox id if 2 or more faces are detected
         :param timeout: OPTIONAL - max timeout delay
-        :return: Profiles object or BytesIO if 2 or more faces are detected
+        :return: None or Image if 2 or more faces are detected and response dict
         """
         data = FormData()
         if file.startswith("http"):
@@ -96,13 +99,11 @@ class FindcloneAsync:
                 if face_box_id is not None:
                     async with self._session.get("https://findclone.ru/upload3", params={"id": face_box_id},
                                                  headers=self.headers) as response2:
-                        resp = await self.__builder(response2)
-                        return resp
+                        return None, await response2.json()
                 else:
-                    img_bytes = paint_boxes(file, resp)  # return bytesIO object
-                    return img_bytes
-            resp = await self.__builder(response)
-            return resp
+                    image = paint_boxes(open(file, 'rb'), resp)
+                    return image, resp
+            return None, resp
 
     async def history(self, offset: int = 0, count: int = 100) -> Histories:
         """

@@ -1,3 +1,6 @@
+from typing import Tuple, Optional
+
+from PIL.Image import Image
 from requests import Session
 from Findclone import __version__
 from .exceptions import FindcloneError, error_handler
@@ -58,14 +61,14 @@ class FindcloneApi:
 
     def upload(self,
                file: [str, BufferedReader],
-               face_box_id: [None, int] = None,
-               timeout: [float] = 30) -> [Profiles, BytesIO]:
+               face_box_id: Optional[int] = None,
+               timeout: Optional[float] = 30) -> Tuple[Optional[Image], dict]:
         """
-        Upload file on read file or url and return Profiles object if founded 1 face else return BytesIO object
+        Upload file on read file or url and return Tuple[Optional[Image], response as dict]
         :param file: image direct download link or path
         :param face_box_id: int OPTIONAL, send facebox id if 2 or more faces are detected
         :param timeout: float max timeout delay
-        :return: Profiles object or BytesIO if 2 or more faces are detected
+        :return: None or Image if 2 or more faces are detected and response dict
         """
         if file.startswith("http"):
             file = self.session.get(file).content
@@ -78,11 +81,11 @@ class FindcloneApi:
         if response.json().get("faceBoxes"):
             if face_box_id is not None:
                 response = self.session.get("https://findclone.ru/upload3", params={"id": face_box_id})
+                return None, response.json()
             else:
-                img_bytes: BytesIO = paint_boxes(file, response.json())  # return bytes IO object
-                return img_bytes
-        profiles: Profiles = self.__builder(response)
-        return profiles  # return Profiles Object
+                image = paint_boxes(open(file, 'rb'), response.json())
+                return image, response.json()
+        return None, response.json()
 
     def history(self, offset: int = 0, count: int = 100) -> Histories:
         """

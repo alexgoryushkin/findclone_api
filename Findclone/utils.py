@@ -7,7 +7,7 @@ from .models import Profiles
 from Findclone.pillow_config import DrawConfig
 
 
-def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> BytesIO:
+def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> Image.Image:
     """Drawing squares and face number in the image if more than 2 faces are found
     :return img_byte_arr: image BytesIO object
     """
@@ -31,7 +31,7 @@ def paint_boxes(file: [BufferedReader, bytes], face_boxes: dict) -> BytesIO:
     img_byte_arr = BytesIO()
     img.save(img_byte_arr, format="png")
     del conf
-    return img_byte_arr
+    return img
 
 
 def random_string(word: int = 8): return "".join(sample(ascii_letters + digits, word))
