@@ -8,7 +8,7 @@ findclone-api - это неофициальное API для взаимодей�
 
 ### Установка через pip
 
-`pip install https://github.com/alexgoryushkin/findclone_api`
+`pip install https://github.com/alexgoryushkin/findclone_api/archive/main.zip`
 
 ### Изменения форка
 
